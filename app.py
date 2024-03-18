@@ -1,10 +1,14 @@
 import os
 import subprocess
 
-def convert_heic_to_mov(input_dir, output_dir):
+def convert_heic_to_mov(input_dir, output_dir, finished_dir):
     # 出力ディレクトリが存在しない場合は作成
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
+
+    # finishedディレクトリが存在しない場合は作成
+    if not os.path.exists(finished_dir):
+        os.makedirs(finished_dir)
 
     # inputディレクトリのHEICファイル一覧を取得
     heic_files = [f for f in os.listdir(input_dir) if f.lower().endswith('.heic')]
@@ -27,9 +31,13 @@ def convert_heic_to_mov(input_dir, output_dir):
         
         print(f"Converted {heic_file} to {mov_file}")
 
-# スクリプトが置かれているディレクトリを基点にinputとoutputフォルダを指定
+        # 変換が完了したファイルをfinishedディレクトリに移動
+        os.rename(os.path.join(input_dir, heic_file), os.path.join(finished_dir, heic_file))
+
+# スクリプトが置かれているディレクトリを基点にinput、output、finishedフォルダを指定
 base_dir = os.path.dirname(os.path.abspath(__file__))
 input_dir = os.path.join(base_dir, 'input')
 output_dir = os.path.join(base_dir, 'output')
+finished_dir = os.path.join(base_dir, 'finished')
 
-convert_heic_to_mov(input_dir, output_dir)
+convert_heic_to_mov(input_dir, output_dir, finished_dir)
